@@ -1,0 +1,18 @@
+﻿@model ArtworkModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<img src="@Model.Url" alt="@Model.Description" style="max-width: 500px; height: auto;" />
+<p>@Model.Id - @Model.Description</p>
+
+@if (ViewBag.IsSaved)
+{
+    <a asp-controller="Artwork" asp-action="Unsave" asp-route-id="@Model.Id">Usuń obrazek z listy zapisanych</a>
+}
+else
+{
+    <a asp-controller="Artwork" asp-action="Save" asp-route-id="@Model.Id">Zapisz obrazek</a>
+}

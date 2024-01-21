@@ -1,0 +1,11 @@
+﻿@model List<ArtworkModel>
+
+<h1>Lista Zapisanych Obrazków</h1>
+
+@foreach (var artwork in Model)
+{
+    <div>
+        <img src="@artwork.PreviewUrl" alt="@artwork.Description" style="max-width: 250px; height: auto;" />
+        <a asp-controller="Artwork" asp-action="Details" asp-route-id="@artwork.Id">Szczegóły</a>
+    </div>
+}
