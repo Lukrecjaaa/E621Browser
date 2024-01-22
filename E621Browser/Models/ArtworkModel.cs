@@ -6,4 +6,5 @@ public class ArtworkModel
     public string? PreviewUrl { get; set; }
     public string? Url { get; set; }
     public string? Description { get; set; }
+    public List<string>? Tags { get; set; } = new List<string>();
 }

@@ -1,36 +1,41 @@
 ﻿@model List<ArtworkModel>
 
-<h1>Lista Obrazków</h1>
+@{
+    ViewBag.Title = "List";
+    Layout = "_Layout";
+}
 
-<form id="searchForm" method="get" asp-controller="Artwork" asp-action="Search" onsubmit="submitSearchForm(); return false;">
-    <label for="tags">Wyszukaj obrazki według tagów:</label>
-    <input type="text" id="tags" name="tags" />
-    <button type="submit">Szukaj</button>
+<h1>List of artworks</h1>
+
+<form class="input-group mb-3" id="searchForm" method="get" asp-controller="Artwork" asp-action="Search" onsubmit="submitSearchForm(); return false;">
+    <input class="form-control mr-sm-2" type="text" id="tags" name="tags" placeholder="Search by tags" />
+    <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
 </form>
 
 <div class="artwork-grid">
     @foreach (var artwork in Model)
     {
         <div class="artwork-item">
-            <img src="@artwork.PreviewUrl" alt="@artwork.Description" />
-            <a asp-controller="Artwork" asp-action="Details" asp-route-id="@artwork.Id">Szczegóły</a>
+            <a asp-controller="Artwork" asp-action="Details" asp-route-id="@artwork.Id">
+                <img src="@artwork.PreviewUrl" alt="@artwork.Description" />
+            </a>
         </div>
     }
 </div>
 
-<div>
+<div class="navigation">
     @if (Model.Any())
     {
         var currentPage = ViewData["CurrentPage"] as int? ?? 1;
 
         if (currentPage > 1)
         {
-            <a asp-action="Index" asp-controller="Artwork" asp-route-page="@(currentPage - 1)">Poprzednia strona</a>
+            <a asp-action="Index" asp-controller="Artwork" asp-route-page="@(currentPage - 1)"><span class="material-symbols-outlined">arrow_back</span></a>
         }
 
-        <span>Strona @(currentPage)</span>
+        <span class="page-number">@(currentPage)</span>
 
-        <a asp-action="Index" asp-controller="Artwork" asp-route-page="@(currentPage + 1)">Następna strona</a>
+        <a asp-action="Index" asp-controller="Artwork" asp-route-page="@(currentPage + 1)"><span class="material-symbols-outlined">arrow_forward</span></a>
     }
 </div>
 

@@ -10,7 +10,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c02ce32e-d5fe-4ca9-bda5-3c2211ee7694" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/E621Browser/wwwroot/icon.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.E621Browser/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.E621Browser/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Controllers/ArtworkController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/Controllers/ArtworkController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Controllers/HomeController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Data/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/Data/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Models/ArtworkModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/Models/ArtworkModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Views/Artwork/Details.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/Views/Artwork/Details.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Views/Artwork/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/Views/Artwork/Index.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Views/Artwork/SavedArtworks.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/Views/Artwork/SavedArtworks.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Views/Artwork/Search.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/Views/Artwork/Search.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Views/Home/Index.cshtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Views/Home/Privacy.cshtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/Views/Shared/_Layout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/Views/Shared/_LoginPartial.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/Views/Shared/_LoginPartial.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/app.db" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/app.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/app.db-shm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/app.db-wal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/E621Browser/wwwroot/css/site.css" beforeDir="false" afterPath="$PROJECT_DIR$/E621Browser/wwwroot/css/site.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,27 +46,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.E621Browser: http.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.E621Browser: http.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\lusia\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\lusia\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\lusia\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\lusia\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
+      "C:\\Users\\lusia\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
+      "C:\\Users\\lusia\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.E621Browser: http">
     <configuration name="E621Browser: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/E621Browser/E621Browser.csproj" />
@@ -107,6 +125,9 @@
       <workItem from="1705779129433" duration="5106000" />
       <workItem from="1705846562896" duration="10013000" />
       <workItem from="1705858293483" duration="8060000" />
+      <workItem from="1705874220356" duration="734000" />
+      <workItem from="1705875724366" duration="121000" />
+      <workItem from="1705952112262" duration="7780000" />
     </task>
     <servers />
   </component>

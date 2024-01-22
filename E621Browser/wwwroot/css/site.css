@@ -21,6 +21,10 @@ body {
   margin-bottom: 60px;
 }
 
+h1, .navbar-brand {
+  font-family: 'Manga Temple', sans-serif;
+}
+
 .artwork-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -39,7 +43,7 @@ body {
   aspect-ratio: 1/1;
 }
 
-.artwork-item a {
+.artwork-item .artwork-buttons {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -50,4 +54,52 @@ body {
   text-align: center;
   text-decoration: none;
   backdrop-filter: blur(16px);
+}
+
+body {
+  background-image:
+          radial-gradient(#FFEBF6 3px, transparent 3px),
+          radial-gradient(#FFEBF6 3px, transparent 3px);
+  background-size: calc(30 * 1px) calc(30 * 1px);
+  background-position: 0 0, calc(15 * 5px) calc(15 * 5px);
+  background-attachment: fixed;
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus,
+.btn.btn-primary:active,
+.btn.btn-primary.active {
+  background-color: #49416D !important;
+  border-color: #49416D !important;
+}
+
+.btn-primary {
+  background-color: #A882DD !important;
+  border-color: #A882DD !important;
+}
+
+.navigation {
+  text-align: center;
+}
+
+.navigation .page-number {
+  font-size: xx-large;
+  opacity: 50%;
+}
+
+a, a span {
+  color: #A882DD;
+}
+
+.tag {
+  background-color: #49416D;
+  color: white;
+  border-radius: 8px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.tag a {
+  color: white;
+  text-decoration: none;
 }

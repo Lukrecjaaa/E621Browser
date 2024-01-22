@@ -1,11 +1,19 @@
 ﻿@model List<ArtworkModel>
 
-<h1>Lista Zapisanych Obrazków</h1>
-
-@foreach (var artwork in Model)
-{
-    <div>
-        <img src="@artwork.PreviewUrl" alt="@artwork.Description" style="max-width: 250px; height: auto;" />
-        <a asp-controller="Artwork" asp-action="Details" asp-route-id="@artwork.Id">Szczegóły</a>
-    </div>
+@{
+    ViewBag.Title = "Saved Artworks";
+    Layout = "_Layout";
 }
+
+<h1>List of saved images</h1>
+
+<div class="artwork-grid">
+    @foreach (var artwork in Model)
+    {
+        <div class="artwork-item">
+            <a asp-controller="Artwork" asp-action="Details" asp-route-id="@artwork.Id">
+                <img src="@artwork.PreviewUrl" alt="@artwork.Description" />
+            </a>
+        </div>
+    }
+</div>

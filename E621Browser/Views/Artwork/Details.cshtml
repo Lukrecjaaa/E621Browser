@@ -1,18 +1,23 @@
 ﻿@model ArtworkModel
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Image Details";
     Layout = "_Layout";
 }
 
 <img src="@Model.Url" alt="@Model.Description" style="max-width: 500px; height: auto;" />
-<p>@Model.Id - @Model.Description</p>
-
+<p>Artwork ID: @Model.Id</p>
+<p>@Model.Description</p>
 @if (ViewBag.IsSaved)
 {
-    <a asp-controller="Artwork" asp-action="Unsave" asp-route-id="@Model.Id">Usuń obrazek z listy zapisanych</a>
+    <a asp-controller="Artwork" asp-action="Unsave" asp-route-id="@Model.Id"><span class="material-symbols-outlined">delete</span></a>
 }
 else
 {
-    <a asp-controller="Artwork" asp-action="Save" asp-route-id="@Model.Id">Zapisz obrazek</a>
+    <a asp-controller="Artwork" asp-action="Save" asp-route-id="@Model.Id"><span class="material-symbols-outlined">favorite</span></a>
+}
+<br/>
+@foreach (var tag in @Model.Tags)
+{
+    <span class="tag"><a asp-controller="Artwork" asp-action="Search" asp-route-query="@tag">#@tag</a></span>
 }

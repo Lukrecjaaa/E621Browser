@@ -59,6 +59,7 @@ public class ArtworkController : Controller
                             Url = post.Sample.Url,
                             PreviewUrl = post.Preview.Url,
                             Description = post.Description,
+                            Tags = post.Tags.General
                         };
 
                         artworks.Add(artwork);
@@ -80,7 +81,7 @@ public class ArtworkController : Controller
         return View(artworks);
     }
 
-    [HttpGet("/Artwork/Search/{query}")]
+    [HttpGet("/Artwork/Search/{query}/{page?}")]
     public IActionResult Search(string query, int page = 1)
     {
         var artworks = GetArtworksFromApi(query, page);
@@ -125,7 +126,14 @@ public class ArtworkController : Controller
             _context.SaveChanges();
         }
         
-        return RedirectToAction("SavedArtworks");
+        var referer = Request.Headers["Referer"].ToString();
+
+        if (string.IsNullOrEmpty(referer))
+        {
+            return RedirectToAction("SavedArtworks");
+        }
+
+        return Redirect(referer);
     }
 
     [Authorize]
@@ -141,7 +149,14 @@ public class ArtworkController : Controller
             _context.SaveChanges();
         }
         
-        return RedirectToAction("Index");
+        var referer = Request.Headers["Referer"].ToString();
+
+        if (string.IsNullOrEmpty(referer))
+        {
+            return RedirectToAction("SavedArtworks");
+        }
+
+        return Redirect(referer);
     }
 
     [Authorize]
@@ -177,12 +192,20 @@ public class Sample
     public string Url { get; set; }
 }
 
+public class Tags
+{
+    [JsonPropertyName("general")]
+    public List<String> General { get; set; }
+}
+
 public class Post
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }
     [JsonPropertyName("sample")]
     public Sample Sample { get; set; }
+    [JsonPropertyName("tags")]
+    public Tags Tags { get; set; }
     [JsonPropertyName("preview")]
     public Preview Preview { get; set; }
     [JsonPropertyName("description")]
