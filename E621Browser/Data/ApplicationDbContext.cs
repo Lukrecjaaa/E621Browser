@@ -11,6 +11,6 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
     
-    public DbSet<ArtworkModel> Artworks { get; set; }
-    public DbSet<SavedArtworkModel> SavedArtworks { get; set; }
+    public DbSet<Artwork> Artworks { get; set; }
+    public DbSet<SavedArtwork> SavedArtworks { get; set; }
 }

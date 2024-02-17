@@ -1,9 +1,7 @@
-﻿using System.Net.Http.Headers;
-using System.Security.Claims;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Security.Claims;
 using E621Browser.Data;
 using E621Browser.Models;
+using E621Browser.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,16 +11,18 @@ namespace E621Browser.Controllers;
 
 public class ArtworkController : Controller
 {
+    private readonly ArtworkService _artworkService;
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<IdentityUser> _userManager;
-    
-    public ArtworkController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+
+    // Constructor for dependency injection, including ArtworkService, which is used for retrieving artworks from API
+    public ArtworkController(ApplicationDbContext context, UserManager<IdentityUser> userManager, ArtworkService artworkService)
     {
         _context = context;
-        _userManager = userManager;
+        _artworkService = artworkService;
     }
 
-    public void TryAddArtwork(ArtworkModel artwork)
+    // Attempts to add unique artwork data to the database for later retrieval, to ensure the API isn't called too often
+    public void TryAddArtwork(Artwork artwork)
     {
         var dbArtwork = _context.Artworks.FirstOrDefault(a => a.Id == artwork.Id);
 
@@ -31,78 +31,40 @@ public class ArtworkController : Controller
         _context.SaveChanges();
     }
 
-    public List<ArtworkModel> GetArtworksFromApi(string query, int page)
+    // Displays a paginated list of artworks from the API
+    public async Task<IActionResult> Index(int page = 1)
     {
-        List<ArtworkModel> artworks = new List<ArtworkModel>();
-
-        using (HttpClient client = new HttpClient())
-        {
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            client.DefaultRequestHeaders.Add("User-Agent", "E621Browser");
-            
-            HttpResponseMessage response = client.GetAsync($"https://e621.net/posts.json?tags=rating:safe {query}&limit=50&page={page}").Result;
-            
-            if (response.IsSuccessStatusCode)
-            {
-                string content = response.Content.ReadAsStringAsync().Result;
-                
-                var apiResponse = JsonSerializer.Deserialize<E621ListApiResponse>(content);
-                
-                if (apiResponse != null)
-                {
-                    foreach (var post in apiResponse.Posts)
-                    {
-                        var artwork = new ArtworkModel
-                        {
-                            Id = post.Id,
-                            Url = post.Sample.Url,
-                            PreviewUrl = post.Preview.Url,
-                            Description = post.Description,
-                            Tags = post.Tags.General
-                        };
-
-                        artworks.Add(artwork);
-                    
-                        TryAddArtwork(artwork);
-                    }
-                }
-            }
-        }
-
-        return artworks;
-    }
-
-    // GET
-    public IActionResult Index(int page = 1)
-    {
-        var artworks = GetArtworksFromApi("", page);
+        var artworks = await _artworkService.GetArtworksFromApiAsync("", page);
         ViewData["CurrentPage"] = page;
         return View(artworks);
     }
 
+    // Displays a paginated list of artworks for a given search query
     [HttpGet("/Artwork/Search/{query}/{page?}")]
-    public IActionResult Search(string query, int page = 1)
+    public async Task<IActionResult> Search(string query, int page = 1)
     {
-        var artworks = GetArtworksFromApi(query, page);
+        var artworks = await _artworkService.GetArtworksFromApiAsync(query, page);
         ViewData["CurrentPage"] = page;
         ViewData["Query"] = query;
-        return View(artworks);
+        return View(artworks); // TODO: Reuse the Index view if it's suitable for displaying search results
     }
 
+    // Displays details for a single artwork
     public IActionResult Details(int id)
     {
         var artwork = _context.Artworks.FirstOrDefault(a => a.Id == id);
+        // TODO: handle null artwork, fetch it from the API
         
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         
-        bool isSaved = _context.SavedArtworks.Any(sa => sa.artwork.Id == id && sa.UserId.Contains(userId));
+        bool isSaved = _context.SavedArtworks.Any(sa => sa.artwork.Id == id && sa.UserIds.Contains(userId));
         
         ViewBag.IsSaved = isSaved;
         
         return View(artwork);
     }
 
+    // Saves an artwork, this page is only available for the logged-in user
     [Authorize]
     public IActionResult Save(int id)
     {
@@ -113,29 +75,23 @@ public class ArtworkController : Controller
         if (savedArtwork == null)
         {
             var artwork = _context.Artworks.FirstOrDefault(a => a.Id == id);
-            _context.SavedArtworks.Add(new SavedArtworkModel
+            _context.SavedArtworks.Add(new SavedArtwork
             {
                 artwork = artwork,
-                UserId = new List<string>{ userId }
+                UserIds = new List<string>{ userId }
             });
             _context.SaveChanges();
         }
         else
         {
-            savedArtwork.UserId.Add(userId);
+            savedArtwork.UserIds.Add(userId);
             _context.SaveChanges();
         }
         
-        var referer = Request.Headers["Referer"].ToString();
-
-        if (string.IsNullOrEmpty(referer))
-        {
-            return RedirectToAction("SavedArtworks");
-        }
-
-        return Redirect(referer);
+        return RedirectToRefererOrFallback("SavedArtworks");
     }
 
+    // Removes the saved artwork, this page is only available for the logged-in user
     [Authorize]
     public IActionResult Unsave(int id)
     {
@@ -145,75 +101,29 @@ public class ArtworkController : Controller
 
         if (savedArtwork != null)
         {
-            savedArtwork.UserId.Remove(userId);
+            savedArtwork.UserIds.Remove(userId);
             _context.SaveChanges();
         }
         
-        var referer = Request.Headers["Referer"].ToString();
-
-        if (string.IsNullOrEmpty(referer))
-        {
-            return RedirectToAction("SavedArtworks");
-        }
-
-        return Redirect(referer);
+        return RedirectToRefererOrFallback("SavedArtworks");
     }
 
+    // Displays a list of saved artworks, this page is only available for the logged-in user
     [Authorize]
     public IActionResult SavedArtworks()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        
         var savedArtworks = _context.SavedArtworks
-            .Where(a => a.UserId.Contains(userId)).Include(sa => sa.artwork)
+            .Where(sa => sa.UserIds.Contains(userId)).Include(sa => sa.artwork)
             .ToList();
 
-        var artworkList = new List<ArtworkModel>();
-
-        foreach (var savedArtwork in savedArtworks)
-        {
-            var artwork = _context.Artworks.FirstOrDefault(a => a.Id == savedArtwork.artwork.Id);
-            if (artwork != null) artworkList.Add(artwork);
-        }
-        
-        return View(artworkList);
+        return View(savedArtworks.Select(sa => sa.artwork).ToList());
     }
-}
-
-public class Preview
-{
-    [JsonPropertyName("url")]
-    public string Url { get; set; }
-}
-
-public class Sample
-{
-    [JsonPropertyName("url")]
-    public string Url { get; set; }
-}
-
-public class Tags
-{
-    [JsonPropertyName("general")]
-    public List<String> General { get; set; }
-}
-
-public class Post
-{
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-    [JsonPropertyName("sample")]
-    public Sample Sample { get; set; }
-    [JsonPropertyName("tags")]
-    public Tags Tags { get; set; }
-    [JsonPropertyName("preview")]
-    public Preview Preview { get; set; }
-    [JsonPropertyName("description")]
-    public string Description { get; set; }
-}
-
-public class E621ListApiResponse
-{
-    [JsonPropertyName("posts")]
-    public List<Post> Posts { get; set; }
+    
+    // Helper method to redirect to the Referer header or a fallback action
+    private IActionResult RedirectToRefererOrFallback(string fallbackAction)
+    {
+        var referer = Request.Headers["Referer"].ToString();
+        return !string.IsNullOrEmpty(referer) ? Redirect(referer) : RedirectToAction(fallbackAction);
+    }
 }
