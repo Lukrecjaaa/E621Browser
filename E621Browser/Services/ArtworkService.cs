@@ -70,4 +70,40 @@ public class ArtworkService
 
         return artworks;
     }
+    
+    // Asynchronously retrieves artwork from the API based on ID
+    public async Task<Artwork> GetArtworkFromApiAsync(int id)
+    {
+        Artwork artwork = new Artwork();
+
+        // Set up the request to the E621 API
+        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        _httpClient.DefaultRequestHeaders.Add("User-Agent", "E621Browser");
+
+        // Asynchronously get the response from the API
+        var response = await _httpClient.GetAsync($"https://e621.net/posts/{id}.json");
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Asynchronously read the response content
+            var content = await response.Content.ReadAsStringAsync();
+            var apiResponse = JsonSerializer.Deserialize<E621PostApiResponse>(content);
+
+            if (apiResponse != null)
+            {
+                artwork = new Artwork
+                {
+                    Id = apiResponse.Post.Id,
+                    Url = apiResponse.Post.Sample.Url,
+                    PreviewUrl = apiResponse.Post.Preview.Url,
+                    Description = apiResponse.Post.Description,
+                    Tags = apiResponse.Post.Tags.General
+                };
+                
+                await TryAddArtworkAsync(artwork);
+            }
+        }
+
+        return artwork;
+    }
 }

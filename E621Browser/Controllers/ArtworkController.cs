@@ -50,12 +50,16 @@ public class ArtworkController : Controller
     }
 
     // Displays details for a single artwork
-    public IActionResult Details(int id)
+    public async Task<IActionResult> Details(int id)
     {
         var artwork = _context.Artworks
             .Include(a => a.Comments)
             .FirstOrDefault(a => a.Id == id);
-        // TODO: handle null artwork, fetch it from the API
+
+        if (artwork == null)
+        {
+            artwork = await _artworkService.GetArtworkFromApiAsync(id);
+        }
         
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         
