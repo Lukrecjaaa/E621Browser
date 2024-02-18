@@ -10,14 +10,45 @@
 <p>@Model.Description</p>
 @if (ViewBag.IsSaved)
 {
-    <a asp-controller="Artwork" asp-action="Unsave" asp-route-id="@Model.Id"><span class="material-symbols-outlined">delete</span></a>
+    <a class="save-link" asp-controller="Artwork" asp-action="Unsave" asp-route-id="@Model.Id"><span class="material-symbols-outlined">delete</span> Remove artwork from saved</a>
 }
 else
 {
-    <a asp-controller="Artwork" asp-action="Save" asp-route-id="@Model.Id"><span class="material-symbols-outlined">favorite</span></a>
+    <a class="save-link" asp-controller="Artwork" asp-action="Save" asp-route-id="@Model.Id"><span class="material-symbols-outlined">favorite</span> Save artwork</a>
 }
 <br/>
 @foreach (var tag in @Model.Tags)
 {
     <span class="tag"><a asp-controller="Artwork" asp-action="Search" asp-route-query="@tag">#@tag</a></span>
 }
+
+@foreach(var comment in Model.Comments)
+{
+    <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@comment.UserEmail's comment</h5>
+                <h6 class="card-subtitle mb-2 text-muted">@comment.CreatedAt.ToString("f")</h6>
+                <p class="card-text">@comment.Content</p>
+                @if(User.Identity.IsAuthenticated && User.Identity.Name == comment.UserEmail) // Check if the comment belongs to the logged-in user
+                {
+                    <form asp-action="Delete" asp-controller="Comments" method="post">
+                        <input type="hidden" name="id" value="@comment.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm" title="Delete Comment">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+}
+
+<form asp-action="Create" asp-controller="Comments" method="post" class="mt-3">
+    <input type="hidden" name="artworkId" value="@Model.Id" />
+    
+    <div class="mb-3">
+        <label for="commentContent" class="form-label">Your Comment</label>
+        <textarea name="content" class="form-control" id="commentContent" rows="3"></textarea>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Add Comment</button>
+</form>

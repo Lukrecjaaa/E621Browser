@@ -103,3 +103,9 @@ a, a span {
   color: white;
   text-decoration: none;
 }
+
+.save-link, .save-link:hover {
+  color: #A882DD;
+  font-size: x-large;
+  text-decoration: none;
+}

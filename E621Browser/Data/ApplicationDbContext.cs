@@ -13,4 +13,5 @@ public class ApplicationDbContext : IdentityDbContext
     
     public DbSet<Artwork> Artworks { get; set; }
     public DbSet<SavedArtwork> SavedArtworks { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 }

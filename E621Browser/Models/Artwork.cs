@@ -8,4 +8,5 @@ public class Artwork
     public string? Url { get; set; } // URL of the artwork's full image
     public string? Description { get; set; } // Description of the artwork
     public List<string>? Tags { get; set; } = new List<string>(); // Tags associated with the artwork
+    public List<Comment> Comments { get; set; } = new List<Comment>(); // User comments associated with the artwork
 }

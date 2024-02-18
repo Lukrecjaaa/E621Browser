@@ -52,7 +52,9 @@ public class ArtworkController : Controller
     // Displays details for a single artwork
     public IActionResult Details(int id)
     {
-        var artwork = _context.Artworks.FirstOrDefault(a => a.Id == id);
+        var artwork = _context.Artworks
+            .Include(a => a.Comments)
+            .FirstOrDefault(a => a.Id == id);
         // TODO: handle null artwork, fetch it from the API
         
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
